@@ -106,7 +106,7 @@ export function Services() {
                                     className="bg-[#FAEED1] rounded-2xl p-6 flex flex-col items-center justify-center text-center text-[#5A4A42]"
                                 >
                                     <span className="font-bold text-lg">تميزي معنا</span>
-                                    <span className="text-2xl mt-2">✨</span>
+                                    {/* Removed sparkle emoji */}
                                 </motion.div>
                             </div>
                         </div>

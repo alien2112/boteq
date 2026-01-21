@@ -5,6 +5,16 @@ import { SiteContent } from '@/models/SiteContent';
 export async function GET() {
     await dbConnect();
     try {
+        const count = await SiteContent.countDocuments();
+        if (count === 0) {
+            const defaults = [
+                { key: "hero_bg", label: "صورة خلفية الهيرو (Hero Background)", value: "/siteimages/5151.webp", type: "image" },
+                { key: "hero_main", label: "صورة الهيرو الرئيسية (Hero Main Image)", value: "/siteimages/download (46).webp", type: "image" },
+                { key: "about_image", label: "صورة قسم من نحن (About Section Image)", value: "/siteimages/download.webp", type: "image" },
+            ];
+            await SiteContent.insertMany(defaults);
+        }
+
         const content = await SiteContent.find({});
         return NextResponse.json(content);
     } catch (error) {

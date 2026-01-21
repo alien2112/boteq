@@ -1,22 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { X, ArrowRight, Share2, Heart, MessageCircle, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Mock Data
-const collectionItems = [
-    { id: 1, title: "جلابية ملكية فاخرة", category: "jalabiya", description: "جلابية مطرزة يدوياً بتصميم عصري وأقمشة فاخرة.", image: "https://placehold.co/600x800/FAEED1/5A4A42?text=Jalabiya+1" },
-    { id: 2, title: "طقم إحرام مريح", category: "ihram", description: "طقم إحرام قطني 100% يوفر الراحة والبرودة أثناء المناسك.", image: "https://placehold.co/600x800/E5E5E5/5A4A42?text=Ihram+Set" },
-    { id: 3, title: "فستان سهرة أنيق", category: "women", description: "تفصيل فستان سهرة حسب الطلب بأعلى معايير الدقة.", image: "https://placehold.co/600x800/FCEBC4/5A4A42?text=Evening+Dress" },
-    { id: 4, title: "تعديل فستان زفاف", category: "alteration", description: "تضييق وتعديل طول فستان زفاف ليبدو مثالياً.", image: "https://placehold.co/600x800/FFF8E7/5A4A42?text=Wedding+Alteration" },
-    { id: 5, title: "جلابية استقبال", category: "jalabiya", description: "تصميم مريح وأنيق لاستقبال الضيوف.", image: "https://placehold.co/600x800/FAEED1/5A4A42?text=Reception+Jalabiya" },
-    { id: 6, title: "إسدال صلاة", category: "ihram", description: "إسدال صلاة واسع وساتر ومريح.", image: "https://placehold.co/600x800/E5E5E5/5A4A42?text=Prayer+Isdal" },
-    { id: 7, title: "بلوزة وتنورة", category: "women", description: "طقم يومي مريح وعملي بتفصيل متقن.", image: "https://placehold.co/600x800/FCEBC4/5A4A42?text=Blouse+Skirt" },
-    { id: 8, title: "تقصير بنطلون", category: "alteration", description: "خدمة تقصير احترافية مع الحفاظ على الحافة الأصلية.", image: "https://placehold.co/600x800/FFF8E7/5A4A42?text=Pants+Hemming" },
-];
+
+// Removed Mock Data
 
 const categories = [
     { id: "all", label: "الكل" },
@@ -28,11 +19,31 @@ const categories = [
 
 export default function CollectionPage() {
     const [activeCategory, setActiveCategory] = useState("all");
-    const [selectedItem, setSelectedItem] = useState<typeof collectionItems[0] | null>(null);
+    const [collectionItems, setCollectionItems] = useState<any[]>([]); // Using any for simplicity or define interface
+    const [selectedItem, setSelectedItem] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const res = await fetch('/api/collection');
+                if (res.ok) {
+                    const data = await res.json();
+                    setCollectionItems(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch collection items", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchItems();
+    }, []);
 
     const filteredItems = activeCategory === "all"
         ? collectionItems
         : collectionItems.filter(item => item.category === activeCategory);
+
 
     return (
         <main className="min-h-screen pt-24 bg-[#FFFBF2]" dir="rtl">

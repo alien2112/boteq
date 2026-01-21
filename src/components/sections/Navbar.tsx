@@ -54,7 +54,6 @@ export function Navbar() {
                 <NavLink href="/" active={pathname === "/"}>الرئيسية</NavLink>
                 <NavLink href="/collection" active={pathname === "/collection"}>التشكيلة</NavLink>
                 <NavLink href="/about" active={pathname === "/about"}>من نحن</NavLink>
-                <NavLink href="/collection" active={pathname === "/collection"}>التشكيلة</NavLink>
                 <NavLink href="/blog" active={pathname.startsWith("/blog")}>المدونة</NavLink>
                 <NavLink href="/contact" active={pathname === "/contact"}>تواصل معنا</NavLink>
             </div>
@@ -72,7 +71,6 @@ export function Navbar() {
                         <MobileNavLink href="/" onClick={() => setIsMobileMenuOpen(false)}>الرئيسية</MobileNavLink>
                         <MobileNavLink href="/collection" onClick={() => setIsMobileMenuOpen(false)}>التشكيلة</MobileNavLink>
                         <MobileNavLink href="/about" onClick={() => setIsMobileMenuOpen(false)}>من نحن</MobileNavLink>
-                        <MobileNavLink href="/collection" onClick={() => setIsMobileMenuOpen(false)}>التشكيلة</MobileNavLink>
                         <MobileNavLink href="/blog" onClick={() => setIsMobileMenuOpen(false)}>المدونة</MobileNavLink>
                         <MobileNavLink href="/contact" onClick={() => setIsMobileMenuOpen(false)}>تواصل معنا</MobileNavLink>
                     </motion.div>
