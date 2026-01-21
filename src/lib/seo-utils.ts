@@ -156,10 +156,13 @@ export function generateTwitterCardTags(
 
 /**
  * Site configuration for SEO
+ * Re-exported from constants for convenience
  */
+export { SITE_NAME as siteName, SITE_URL as siteUrl } from './constants';
+
 export const siteConfig = {
     siteName: 'بطلة - أتيلييه ومحل خياطة',
-    siteUrl: 'https://boteq.com', // Update with actual URL
+    siteUrl: 'https://boteq.com',
     defaultOGImage: '/og-image.png',
     twitterHandle: '@boteq_fashion',
     locale: 'ar_SA',

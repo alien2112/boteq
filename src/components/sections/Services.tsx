@@ -2,9 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Scissors, Ruler, Shirt, Sparkles, ArrowRight, CheckCircle2, Clock, ThumbsUp } from "lucide-react";
+import { Scissors, Ruler, Shirt, Sparkles, ArrowRight, CheckCircle2, Clock, ThumbsUp, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
+import { getInquiryWhatsAppUrl } from "@/lib/constants";
 
 export function Services() {
     return (
@@ -84,16 +85,17 @@ export function Services() {
                                 <BenefitItem text="خبرة عملية طويلة في مصانع الخياطة المحترفة" />
                             </div>
 
-                            <Link href="/contact">
+                            <a href={getInquiryWhatsAppUrl()} target="_blank" rel="noopener noreferrer">
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="inline-flex items-center gap-2 bg-[#5A4A42] hover:bg-[#8B6F21] text-white px-8 py-4 rounded-xl transition-colors duration-300 shadow-lg group mt-4 cursor-pointer"
+                                    className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1da851] text-white px-8 py-4 rounded-xl transition-colors duration-300 shadow-lg group mt-4 cursor-pointer"
                                 >
-                                    <span>احجزي موعدك الآن</span>
+                                    <MessageCircle size={20} fill="white" className="stroke-none" />
+                                    <span>احجزي موعدك عبر واتساب</span>
                                     <ArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                                 </motion.div>
-                            </Link>
+                            </a>
                         </div>
 
                         <div className="w-full lg:w-1/2">

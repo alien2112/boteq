@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import React from "react";
-import { Scissors, Ruler, CheckCircle, Award, Shirt, Star, Phone } from "lucide-react";
+import { Scissors, Ruler, CheckCircle, Award, Shirt, Star, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { getInquiryWhatsAppUrl } from "@/lib/constants";
 
 export function About() {
     const { content } = useSiteContent();
@@ -138,9 +139,9 @@ export function About() {
                         transition={{ duration: 0.6, delay: 0.4 }}
                         className="pt-4"
                     >
-                        <a href="#contact" className="group inline-flex items-center gap-4 bg-[#5A4A42] text-white px-10 py-5 rounded-2xl hover:bg-gold-primary transition-all duration-300 shadow-xl hover:shadow-gold-primary/30 hover:-translate-y-1">
-                            <span className="font-medium text-lg">تواصلي معنا الآن</span>
-                            <Phone size={22} className="stroke-[2] group-hover:rotate-12 transition-transform" />
+                        <a href={getInquiryWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-4 bg-[#25D366] text-white px-10 py-5 rounded-2xl hover:bg-[#1da851] transition-all duration-300 shadow-xl hover:shadow-[#25D366]/30 hover:-translate-y-1">
+                            <MessageCircle size={24} fill="white" className="stroke-none" />
+                            <span className="font-medium text-lg">تواصلي عبر واتساب</span>
                         </a>
                     </motion.div>
                 </div>

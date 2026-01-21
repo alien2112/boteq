@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { WHATSAPP_NUMBER, getInquiryWhatsAppUrl } from "@/lib/constants";
 
 export function Footer() {
     return (
@@ -24,7 +25,7 @@ export function Footer() {
                     {/* Center Section: Socials & Connect */}
                     <div className="flex flex-col items-center gap-6 flex-1">
                         <div className="flex gap-3">
-                            <SocialIcon href="#" icon={<WhatsappIcon />} />
+                            <SocialIcon href={`https://wa.me/${WHATSAPP_NUMBER}`} icon={<WhatsappIcon />} />
                             <SocialIcon href="#" icon={<SnapchatIcon />} />
                             <SocialIcon href="#" icon={<XIcon />} />
                             <SocialIcon href="#" icon={<LinkedinIcon />} />
@@ -32,9 +33,9 @@ export function Footer() {
                             <SocialIcon href="#" icon={<FacebookIcon />} />
                         </div>
 
-                        <Link href="/contact" className="bg-[#FDA4AF] hover:bg-[#FB7185] text-white text-lg md:text-xl font-bold py-3 px-12 rounded-xl shadow-lg transition-transform transform hover:-translate-y-1 block text-center">
-                            تواصل معنا
-                        </Link>
+                        <a href={getInquiryWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="bg-[#25D366] hover:bg-[#1da851] text-white text-lg md:text-xl font-bold py-3 px-12 rounded-xl shadow-lg transition-transform transform hover:-translate-y-1 block text-center">
+                            تواصل عبر واتساب
+                        </a>
                     </div>
 
                     {/* Map Section */}

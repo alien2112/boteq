@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { X, ArrowRight, Share2, Heart, MessageCircle, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getOrderWhatsAppUrl, WHATSAPP_NUMBER } from "@/lib/constants";
 
 
 // Removed Mock Data
@@ -265,13 +266,18 @@ export default function CollectionPage() {
                                     </div>
 
                                     <div className="space-y-4">
-                                        <Link
-                                            href="/contact"
-                                            className="block w-full bg-[#5A4A42] hover:bg-[#C5A038] text-white text-center py-5 rounded-2xl font-bold text-lg transition-all shadow-xl hover:shadow-[#C5A038]/30 hover:-translate-y-1 relative overflow-hidden group"
+                                        <a
+                                            href={selectedItem ? getOrderWhatsAppUrl(selectedItem.title, categories.find(c => c.id === selectedItem.category)?.label) : '#'}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="block w-full bg-[#25D366] hover:bg-[#1da851] text-white text-center py-5 rounded-2xl font-bold text-lg transition-all shadow-xl hover:shadow-[#25D366]/30 hover:-translate-y-1 relative overflow-hidden group"
                                         >
-                                            <span className="relative z-10">اطلبي هذا التصميم الآن</span>
+                                            <span className="relative z-10 flex items-center justify-center gap-3">
+                                                <MessageCircle size={24} fill="white" className="stroke-none" />
+                                                اطلبي هذا التصميم عبر واتساب
+                                            </span>
                                             <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                                        </Link>
+                                        </a>
 
                                         <div className="flex gap-4">
                                             <button className="flex-1 border-2 border-gray-100 hover:border-[#C5A038] text-gray-500 hover:text-[#C5A038] hover:bg-white py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 group">
@@ -299,7 +305,7 @@ export default function CollectionPage() {
                 whileTap={{ scale: 0.9 }}
                 className="fixed bottom-6 left-6 z-40 md:hidden"
             >
-                <Link href="https://wa.me/966501234567" className="w-16 h-16 bg-[#25D366] text-white rounded-full shadow-2xl flex items-center justify-center">
+                <Link href={`https://wa.me/${WHATSAPP_NUMBER}`} className="w-16 h-16 bg-[#25D366] text-white rounded-full shadow-2xl flex items-center justify-center">
                     <MessageCircle size={32} fill="white" className="stroke-none" />
                 </Link>
             </motion.div>

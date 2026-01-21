@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle2, AlertCircle, Loader2, Instagram, Twitter, Facebook } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DISPLAY_PHONE, LOCATION, WHATSAPP_NUMBER, getInquiryWhatsAppUrl } from "@/lib/constants";
 
 export function Contact() {
     const [formState, setFormState] = useState({
@@ -37,14 +38,14 @@ export function Contact() {
         {
             icon: Phone,
             title: "اتصلي بنا",
-            value: "+966 50 123 4567",
-            link: "tel:+966501234567",
+            value: DISPLAY_PHONE,
+            link: `https://wa.me/${WHATSAPP_NUMBER}`,
             delay: 0.1
         },
         {
             icon: MapPin,
             title: "موقعنا",
-            value: "حي الدانة، الدمام، المملكة العربية السعودية",
+            value: LOCATION,
             link: "https://www.google.com/maps?q=26.4660679,50.0415029&z=17&hl=en",
             delay: 0.2
         },
