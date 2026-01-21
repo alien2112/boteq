@@ -81,7 +81,7 @@ export function Gallery() {
                         initial={{ scale: 0 }}
                         whileInView={{ scale: 1 }}
                         transition={{ delay: 0.5, type: "spring" }}
-                        className="absolute -top-4 -right-12 text-[#FFC0CB]"
+                        className="absolute -top-4 -right-12 text-[#C5A038]"
                     >
                         <svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
@@ -217,10 +217,10 @@ export function Gallery() {
                             </motion.div>
 
                             {/* Decorative Stars */}
-                            <div className="absolute left-[10%] top-[25%] text-[#FFC0CB] animate-bounce delay-700">
+                            <div className="absolute left-[10%] top-[25%] text-[#C5A038] animate-bounce delay-700">
                                 <svg width="50" height="50" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" /></svg>
                             </div>
-                            <div className="absolute right-[10%] bottom-[10%] text-[#FFC0CB] animate-pulse">
+                            <div className="absolute right-[10%] bottom-[10%] text-[#C5A038] animate-pulse">
                                 <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" /></svg>
                             </div>
 

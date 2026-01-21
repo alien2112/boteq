@@ -15,6 +15,8 @@ const categories = [
     { id: "ihram", label: "إحرامات" },
     { id: "women", label: "خياطة نسائية" },
     { id: "alteration", label: "تعديلات" },
+    { id: "prayer_ihram", label: "إحرامات الصلاة" },
+    { id: "uniform", label: "زي موحد (مراييل مدرسية)" },
 ];
 
 export default function CollectionPage() {

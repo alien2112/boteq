@@ -140,6 +140,8 @@ export default function NewCollectionItem() {
                                 <option value="ihram">إحرامات</option>
                                 <option value="alteration">تعديلات</option>
                                 <option value="women">خياطة نسائية</option>
+                                <option value="prayer_ihram">إحرامات الصلاة</option>
+                                <option value="uniform">زي موحد (مراييل مدرسية)</option>
                             </select>
                         </div>
                     </div>

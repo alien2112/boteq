@@ -3,7 +3,7 @@ import mongoose, { Schema, Model, models } from 'mongoose';
 export interface ICollectionItem {
     title: string;
     description: string;
-    category: 'jalabiya' | 'ihram' | 'alteration' | 'women';
+    category: 'jalabiya' | 'ihram' | 'alteration' | 'women' | 'prayer_ihram' | 'uniform';
     image: string;
     isFeatured: boolean;
     createdAt: Date;
@@ -15,7 +15,7 @@ const CollectionItemSchema = new Schema<ICollectionItem>({
     category: {
         type: String,
         required: true,
-        enum: ['jalabiya', 'ihram', 'alteration', 'women']
+        enum: ['jalabiya', 'ihram', 'alteration', 'women', 'prayer_ihram', 'uniform']
     },
     image: { type: String, required: true },
     isFeatured: { type: Boolean, default: false },

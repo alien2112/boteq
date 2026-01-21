@@ -54,7 +54,7 @@ export function Hero() {
                     <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                        className="absolute -top-10 -left-10 text-pink-300"
+                        className="absolute -top-10 -left-10 text-[#C5A038]"
                     >
                         <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
