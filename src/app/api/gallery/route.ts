@@ -77,7 +77,11 @@ export async function GET() {
             console.log(`Cleaned up ${duplicatesToDelete.length} duplicate gallery items.`);
         }
 
-        return NextResponse.json(uniqueItems);
+        return NextResponse.json(uniqueItems, {
+            headers: {
+                'Cache-Control': 'public, max-age=1800, s-maxage=1800, stale-while-revalidate=59',
+            }
+        });
     } catch (error) {
         console.error('Error fetching gallery items:', error);
         return NextResponse.json({ error: 'Failed to fetch gallery items' }, { status: 500 });

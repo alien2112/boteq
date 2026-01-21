@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 import { Scissors, Ruler, Shirt, Sparkles, ArrowRight, CheckCircle2, Clock, ThumbsUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
@@ -83,15 +84,16 @@ export function Services() {
                                 <BenefitItem text="خبرة عملية طويلة في مصانع الخياطة المحترفة" />
                             </div>
 
-                            <motion.a
-                                href="#contact"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="inline-flex items-center gap-2 bg-[#5A4A42] hover:bg-[#8B6F21] text-white px-8 py-4 rounded-xl transition-colors duration-300 shadow-lg group mt-4"
-                            >
-                                <span>احجزي موعدك الآن</span>
-                                <ArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                            </motion.a>
+                            <Link href="/contact">
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="inline-flex items-center gap-2 bg-[#5A4A42] hover:bg-[#8B6F21] text-white px-8 py-4 rounded-xl transition-colors duration-300 shadow-lg group mt-4 cursor-pointer"
+                                >
+                                    <span>احجزي موعدك الآن</span>
+                                    <ArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                                </motion.div>
+                            </Link>
                         </div>
 
                         <div className="w-full lg:w-1/2">
@@ -134,10 +136,10 @@ function ServiceCard({ title, description, icon }: { title: string, description:
             <p className="text-gray-500 leading-relaxed text-sm flex-grow mb-6">
                 {description}
             </p>
-            <div className="flex items-center text-[#C5A038] font-medium text-sm group-hover:gap-2 transition-all">
+            <Link href="/contact" className="flex items-center text-[#C5A038] font-medium text-sm group-hover:gap-2 transition-all">
                 <span>المزيد من التفاصيل</span>
                 <ArrowRight className="w-4 h-4 mr-1 opacity-0 group-hover:opacity-100 group-hover:mr-2 transition-all" />
-            </div>
+            </Link>
         </motion.div>
     )
 }

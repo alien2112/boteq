@@ -35,7 +35,7 @@ export async function GET(
         return new NextResponse(webStream, {
             headers: {
                 'Content-Type': (file.metadata as any)?.contentType || 'image/jpeg',
-                'Cache-Control': 'public, max-age=31536000, immutable',
+                'Cache-Control': 'public, max-age=1800',
             },
         });
     } catch (error) {

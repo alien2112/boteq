@@ -28,7 +28,7 @@ export function Footer() {
                             <SocialIcon href="#" icon={<SnapchatIcon />} />
                             <SocialIcon href="#" icon={<XIcon />} />
                             <SocialIcon href="#" icon={<LinkedinIcon />} />
-                            <SocialIcon href="#" icon={<InstagramIcon />} />
+                            <SocialIcon href="https://www.instagram.com/rawaa_boutique1?utm_source=qr&igsh=dXI3cjB0MHlsNnY2" icon={<InstagramIcon />} />
                             <SocialIcon href="#" icon={<FacebookIcon />} />
                         </div>
 

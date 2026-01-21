@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import { useSiteContent } from "@/hooks/useSiteContent";
@@ -96,7 +97,9 @@ export function Hero() {
                     className="mt-10"
                 >
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button className="font-arabic text-lg px-8 py-6 shadow-xl hover:shadow-[#C5A038]/30">تصفحي التشكيلة</Button>
+                        <Link href="/collection">
+                            <Button className="font-arabic text-lg px-8 py-6 shadow-xl hover:shadow-[#C5A038]/30">تصفحي التشكيلة</Button>
+                        </Link>
                     </motion.div>
                 </motion.div>
 

@@ -14,7 +14,11 @@ export async function GET(request: Request) {
 
     try {
         const posts = await BlogPost.find(query).sort({ createdAt: -1 });
-        return NextResponse.json(posts);
+        return NextResponse.json(posts, {
+            headers: {
+                'Cache-Control': 'public, max-age=1800, s-maxage=1800, stale-while-revalidate=59',
+            }
+        });
     } catch (error) {
         return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
     }

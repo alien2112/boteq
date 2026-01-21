@@ -15,7 +15,11 @@ export async function GET(request: Request) {
         if (featured === 'true') query.isFeatured = true;
 
         const items = await CollectionItem.find(query).sort({ createdAt: -1 });
-        return NextResponse.json(items);
+        return NextResponse.json(items, {
+            headers: {
+                'Cache-Control': 'public, max-age=1800, s-maxage=1800, stale-while-revalidate=59',
+            }
+        });
     } catch (error) {
         return NextResponse.json({ error: 'Failed to fetch items' }, { status: 500 });
     }

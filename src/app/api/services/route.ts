@@ -37,7 +37,11 @@ export async function GET() {
         }
 
         const services = await Service.find({}).sort({ order: 1 });
-        return NextResponse.json(services);
+        return NextResponse.json(services, {
+            headers: {
+                'Cache-Control': 'public, max-age=1800, s-maxage=1800, stale-while-revalidate=59',
+            }
+        });
     } catch (error) {
         console.error('Error fetching services:', error);
         return NextResponse.json({ error: 'Failed to fetch services' }, { status: 500 });
