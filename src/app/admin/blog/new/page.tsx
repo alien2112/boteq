@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Upload, Loader2 } from "lucide-react";
+import { ArrowRight, Upload, Loader2, Settings, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
 
 interface BlogEditorProps {
-    postId?: string; // If present, edit mode
+    postId?: string;
 }
 
 export default function BlogEditor({ params }: { params: { id?: string } }) {
@@ -19,6 +19,8 @@ export default function BlogEditor({ params }: { params: { id?: string } }) {
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(isEdit);
     const [uploading, setUploading] = useState(false);
+    const [showSEO, setShowSEO] = useState(false);
+
     const [formData, setFormData] = useState({
         title: "",
         excerpt: "",
@@ -26,8 +28,24 @@ export default function BlogEditor({ params }: { params: { id?: string } }) {
         image: "",
         category: "General",
         tags: "",
-        status: "draft"
+        status: "draft",
+        // SEO Fields
+        slug: "",
+        autoSEO: true,
+        metaTitle: "",
+        metaDescription: "",
+        metaKeywords: "",
     });
+
+    // Generate slug preview from title
+    const generateSlugPreview = (title: string) => {
+        return title
+            .trim()
+            .replace(/[^\w\s\u0600-\u06FF-]/g, '')
+            .replace(/[\s_]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    };
 
     // Fetch existing data if edit mode
     useEffect(() => {
@@ -43,7 +61,12 @@ export default function BlogEditor({ params }: { params: { id?: string } }) {
                     image: data.image,
                     category: data.category,
                     tags: data.tags.join(", "),
-                    status: data.status
+                    status: data.status,
+                    slug: data.slug || "",
+                    autoSEO: data.autoSEO !== false,
+                    metaTitle: data.metaTitle || "",
+                    metaDescription: data.metaDescription || "",
+                    metaKeywords: data.metaKeywords?.join(", ") || "",
                 });
             } catch (err) {
                 console.error("Failed to load post");
@@ -79,7 +102,9 @@ export default function BlogEditor({ params }: { params: { id?: string } }) {
 
         const payload = {
             ...formData,
-            tags: formData.tags.split(",").map(t => t.trim()).filter(Boolean)
+            tags: formData.tags.split(",").map(t => t.trim()).filter(Boolean),
+            metaKeywords: formData.metaKeywords.split(",").map(t => t.trim()).filter(Boolean),
+            slug: formData.slug || generateSlugPreview(formData.title),
         };
 
         try {
@@ -105,6 +130,8 @@ export default function BlogEditor({ params }: { params: { id?: string } }) {
     };
 
     if (fetching) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin text-[#C5A038]" /></div>;
+
+    const slugPreview = formData.slug || generateSlugPreview(formData.title);
 
     return (
         <div className="min-h-screen bg-[#FFFBF2] p-8" dir="rtl">
@@ -187,6 +214,24 @@ export default function BlogEditor({ params }: { params: { id?: string } }) {
                         </div>
                     </div>
 
+                    {/* Slug Preview */}
+                    <div>
+                        <label className="block font-bold text-gray-700 mb-2">رابط المقال (Slug)</label>
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                value={formData.slug}
+                                onChange={e => setFormData({ ...formData, slug: e.target.value })}
+                                className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-[#C5A038] outline-none font-mono text-sm"
+                                placeholder={slugPreview || "يُولّد تلقائياً من العنوان"}
+                                dir="ltr"
+                            />
+                        </div>
+                        <p className="text-xs text-gray-400 mt-2" dir="ltr">
+                            Preview: /blog/{encodeURIComponent(slugPreview) || "..."}
+                        </p>
+                    </div>
+
                     {/* Excerpt */}
                     <div>
                         <label className="block font-bold text-gray-700 mb-2">مقتطف قصير (Summary)</label>
@@ -200,7 +245,7 @@ export default function BlogEditor({ params }: { params: { id?: string } }) {
                         />
                     </div>
 
-                    {/* Content Editor (Simple Textarea for now, can be Rich Text later) */}
+                    {/* Content Editor */}
                     <div>
                         <div className="flex justify-between items-center mb-2">
                             <label className="block font-bold text-gray-700">محتوى المقال (HTML مدعوم)</label>
@@ -239,6 +284,79 @@ export default function BlogEditor({ params }: { params: { id?: string } }) {
                                 <option value="published">منشور (Published)</option>
                             </select>
                         </div>
+                    </div>
+
+                    {/* SEO Settings Collapsible */}
+                    <div className="border border-gray-100 rounded-2xl overflow-hidden">
+                        <button
+                            type="button"
+                            onClick={() => setShowSEO(!showSEO)}
+                            className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                        >
+                            <div className="flex items-center gap-2 font-bold text-gray-700">
+                                <Settings size={18} />
+                                <span>إعدادات SEO المتقدمة</span>
+                            </div>
+                            {showSEO ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                        </button>
+
+                        {showSEO && (
+                            <div className="p-6 space-y-6 border-t border-gray-100">
+                                {/* Auto SEO Toggle */}
+                                <div className="flex items-center gap-3">
+                                    <input
+                                        type="checkbox"
+                                        id="autoSEO"
+                                        checked={formData.autoSEO}
+                                        onChange={e => setFormData({ ...formData, autoSEO: e.target.checked })}
+                                        className="w-5 h-5 accent-[#C5A038]"
+                                    />
+                                    <label htmlFor="autoSEO" className="font-medium text-gray-700">
+                                        توليد SEO تلقائي (إذا لم تُحدد قيم مخصصة)
+                                    </label>
+                                </div>
+
+                                {/* Meta Title */}
+                                <div>
+                                    <label className="block font-bold text-gray-700 mb-2">عنوان Meta (60 حرف كحد أقصى)</label>
+                                    <input
+                                        type="text"
+                                        maxLength={60}
+                                        value={formData.metaTitle}
+                                        onChange={e => setFormData({ ...formData, metaTitle: e.target.value })}
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#C5A038] outline-none"
+                                        placeholder="يُولّد تلقائياً من العنوان"
+                                    />
+                                    <p className="text-xs text-gray-400 mt-1">{formData.metaTitle.length}/60 حرف</p>
+                                </div>
+
+                                {/* Meta Description */}
+                                <div>
+                                    <label className="block font-bold text-gray-700 mb-2">وصف Meta (160 حرف كحد أقصى)</label>
+                                    <textarea
+                                        rows={2}
+                                        maxLength={160}
+                                        value={formData.metaDescription}
+                                        onChange={e => setFormData({ ...formData, metaDescription: e.target.value })}
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#C5A038] outline-none resize-none"
+                                        placeholder="يُولّد تلقائياً من المقتطف"
+                                    />
+                                    <p className="text-xs text-gray-400 mt-1">{formData.metaDescription.length}/160 حرف</p>
+                                </div>
+
+                                {/* Meta Keywords */}
+                                <div>
+                                    <label className="block font-bold text-gray-700 mb-2">كلمات مفتاحية (Keywords)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.metaKeywords}
+                                        onChange={e => setFormData({ ...formData, metaKeywords: e.target.value })}
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#C5A038] outline-none"
+                                        placeholder="خياطة، أزياء، موضة (فصل بفاصلة)"
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="pt-6">

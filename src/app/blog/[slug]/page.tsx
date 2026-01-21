@@ -7,6 +7,7 @@ import type { Metadata, ResolvingMetadata } from "next";
 
 import dbConnect from "@/lib/db";
 import { BlogPost } from "@/models/BlogPost";
+import { generateSEOMetadata, siteConfig } from "@/lib/seo-utils";
 import ScrollProgress from "@/components/blog/ScrollProgress";
 import TableOfContents from "@/components/blog/TableOfContents";
 import ShareButtons from "@/components/blog/ShareButtons";
@@ -22,7 +23,29 @@ interface PageProps {
 
 async function getPost(slug: string) {
     await dbConnect();
-    const post = await BlogPost.findOne({ slug, status: 'published' });
+
+    // Try multiple decode strategies for Arabic URLs
+    let post = null;
+
+    // 1. Try exact match
+    post = await BlogPost.findOne({ slug, status: 'published' });
+
+    // 2. Try decoded slug (for URL-encoded Arabic)
+    if (!post) {
+        try {
+            const decodedSlug = decodeURIComponent(slug);
+            post = await BlogPost.findOne({ slug: decodedSlug, status: 'published' });
+        } catch (e) { }
+    }
+
+    // 3. Try double decode fallback for some browsers/mobile
+    if (!post) {
+        try {
+            const doubleDecoded = decodeURIComponent(decodeURIComponent(slug));
+            post = await BlogPost.findOne({ slug: doubleDecoded, status: 'published' });
+        } catch (e) { }
+    }
+
     return post;
 }
 
@@ -39,25 +62,63 @@ export async function generateMetadata(
         }
     }
 
-    const previousImages = (await parent).openGraph?.images || []
+    // Use stored SEO metadata or generate dynamically
+    let title = post.metaTitle || post.title;
+    let description = post.metaDescription || post.excerpt;
+    let keywords = post.metaKeywords || [];
+
+    // Use manual SEO if provided
+    if (post.manualSEO) {
+        if (post.manualSEO.title) title = post.manualSEO.title;
+        if (post.manualSEO.description) description = post.manualSEO.description;
+        if (post.manualSEO.keywords && post.manualSEO.keywords.length > 0) keywords = post.manualSEO.keywords;
+    }
+
+    // Auto-generate if missing
+    if (!title || !description) {
+        const generated = generateSEOMetadata(post.title, post.content, post.excerpt);
+        if (!title) title = generated.metaTitle;
+        if (!description) description = generated.metaDescription;
+        if (!keywords || keywords.length === 0) keywords = generated.metaKeywords;
+    }
+
+    const previousImages = (await parent).openGraph?.images || [];
+    const ogImage = post.manualSEO?.ogImage || post.image;
+
+    // Canonical URL - use the Arabic slug
+    const canonicalUrl = post.manualSEO?.canonicalUrl || `${siteConfig.siteUrl}/blog/${encodeURIComponent(post.slug)}`;
 
     return {
-        title: post.title,
-        description: post.excerpt,
+        title: `${title} | ${siteConfig.siteName}`,
+        description: description,
+        keywords: keywords,
+        authors: [{ name: post.author }],
+        alternates: {
+            canonical: canonicalUrl,
+        },
+        robots: {
+            index: !post.manualSEO?.noIndex,
+            follow: !post.manualSEO?.noFollow,
+        },
         openGraph: {
-            title: post.title,
-            description: post.excerpt,
-            images: [post.image, ...previousImages],
+            title: title,
+            description: description,
+            url: canonicalUrl,
+            siteName: siteConfig.siteName,
+            images: [ogImage, ...previousImages],
             type: 'article',
-            publishedTime: post.createdAt,
+            publishedTime: post.createdAt?.toISOString(),
+            modifiedTime: post.updatedAt?.toISOString(),
             authors: [post.author],
             tags: post.tags,
+            locale: siteConfig.locale,
         },
         twitter: {
             card: 'summary_large_image',
-            title: post.title,
-            description: post.excerpt,
-            images: [post.image],
+            title: title,
+            description: description,
+            images: [ogImage],
+            site: siteConfig.twitterHandle,
         },
     }
 }
@@ -85,15 +146,21 @@ export default async function BlogDetail({ params }: PageProps) {
         },
         "publisher": {
             "@type": "Organization",
-            "name": "5yata",
+            "name": siteConfig.siteName,
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://5yata.com/logo.png" // Placeholder
+                "url": `${siteConfig.siteUrl}/logo.png`
             }
         },
         "datePublished": post.createdAt,
-        "description": post.excerpt,
-        "articleBody": post.content.replace(/<[^>]*>/g, '') // Strip HTML for schema
+        "dateModified": post.updatedAt,
+        "description": post.metaDescription || post.excerpt,
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `${siteConfig.siteUrl}/blog/${encodeURIComponent(post.slug)}`
+        },
+        "keywords": post.metaKeywords?.join(', ') || post.tags?.join(', '),
+        "articleBody": post.content.replace(/<[^>]*>/g, '')
     };
 
     return (
@@ -153,7 +220,6 @@ export default async function BlogDetail({ params }: PageProps) {
 
                         {/* Sidebar (Desktop) */}
                         <aside className="hidden lg:block lg:w-1/4">
-                            {/* Sticky container handling by CSS sticky inside TOC component */}
                             <TableOfContents content={post.content} />
                         </aside>
 

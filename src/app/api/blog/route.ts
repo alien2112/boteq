@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import { BlogPost } from '@/models/BlogPost';
+import { generateSlug, generateSEOMetadata } from '@/lib/seo-utils';
 
 export async function GET(request: Request) {
     await dbConnect();
@@ -29,13 +30,35 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
-        // Simple slug generation
-        const baseSlug = body.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-        const slug = `${baseSlug}-${Date.now()}`;
+        // Generate Arabic-friendly slug from title
+        let slug = body.slug || generateSlug(body.title);
 
-        const post = await BlogPost.create({ ...body, slug });
-        return NextResponse.json(post);
+        // Check if slug exists, if so add a unique suffix
+        const existingPost = await BlogPost.findOne({ slug });
+        if (existingPost) {
+            slug = `${slug}-${Date.now()}`;
+        }
+
+        // Auto-generate SEO metadata if autoSEO is enabled (default true)
+        let seoData = {};
+        if (body.autoSEO !== false) {
+            const generated = generateSEOMetadata(body.title, body.content, body.excerpt);
+            seoData = {
+                metaTitle: body.metaTitle || generated.metaTitle,
+                metaDescription: body.metaDescription || generated.metaDescription,
+                metaKeywords: body.metaKeywords?.length ? body.metaKeywords : generated.metaKeywords,
+            };
+        }
+
+        const post = await BlogPost.create({
+            ...body,
+            slug,
+            ...seoData,
+        });
+
+        return NextResponse.json(post, { status: 201 });
     } catch (error) {
+        console.error('Error creating post:', error);
         return NextResponse.json({ error: 'Failed to create post' }, { status: 500 });
     }
 }
